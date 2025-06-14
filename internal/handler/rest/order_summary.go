@@ -99,3 +99,8 @@ func (h *OrderSummary) GetCustomerOrderSummary(c *gin.Context) {
 
 	restjson.ResponseData(c, response)
 }
+
+func (h *OrderSummary) GetUserTransactions(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Param("userId"))
+	restjson.ResponseData(c, userId)
+}

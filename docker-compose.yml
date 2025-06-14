@@ -12,6 +12,19 @@ services:
     networks:
       - backend
 
+  mysql_db:
+    image: mysql:8.0 # Or your preferred MySQL version
+    container_name: wallet-mysql-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234qwer # Change this!
+      MYSQL_DATABASE: walletdb
+      # MYSQL_USER: user # Optional: if you want a non-root user
+      # MYSQL_PASSWORD: userpassword # Optional: password for the non-root user
+    ports:
+      - 3306:3306
+    networks:
+      - backend
 #  experiential-learning:
 #    image: experiential-learning:v0.1
 #    build:

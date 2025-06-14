@@ -5,12 +5,10 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/rs/zerolog"
-	"gopkg.in/DataDog/dd-trace-go.v1/ddtrace/tracer"
-
 	"bitbucket.org/ntuclink/ff-order-history-go/internal/config"
 	"bitbucket.org/ntuclink/ff-order-history-go/internal/db"
 	"bitbucket.org/ntuclink/ff-order-history-go/internal/server"
+	"github.com/rs/zerolog"
 )
 
 func main() {
@@ -22,13 +20,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	// Initialize DataDog tracer
-	tracer.Start(
-		tracer.WithEnv(cfg.Env),
-		tracer.WithService(cfg.ServiceName),
-	)
-	defer tracer.Stop()
 
 	// Connect to the database
 	db, err := db.Connect(cfg)

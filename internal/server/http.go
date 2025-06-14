@@ -137,4 +137,7 @@ func (s *Server) RegisterRoutes() {
 
 	s.engine.Group("/v1").
 		GET("/customers/:customerId/order-summary", orderSummaryHandler.GetCustomerOrderSummary)
+
+	s.engine.Group("/v1").
+		GET("/user/:userId/transactions", orderSummaryHandler.GetUserTransactions)
 }

@@ -3,9 +3,9 @@ package config
 import (
 	"errors"
 	"fmt"
-	"time"
-
 	"github.com/spf13/viper"
+	"os"
+	"time"
 )
 
 var ErrEnvVarsNotSet = errors.New("env vars not set")
@@ -37,11 +37,20 @@ type DatabaseVar struct {
 //   - Config: The loaded configuration.
 //   - error: An error if the configuration could not be loaded or is invalid.
 func Load() (Config, error) {
-	viper.AutomaticEnv()
+	env, ok := os.LookupEnv("ENV")
+	if ok && env == "prod" {
+		viper.SetConfigFile("./deployments/rest/prod.env")
+	} else {
+		viper.SetConfigFile("./deployments/rest/local.env")
+	}
+
+	if err := viper.ReadInConfig(); err != nil {
+		fmt.Printf("Error reading config file, %s", err)
+	}
 
 	config := Config{
 		ServiceName: viper.GetString("SERVICE_NAME"),
-		Env:         viper.GetString("DD_ENV"),
+		Env:         viper.GetString("ENV"),
 		ServicePort: viper.GetInt("SERVICE_PORT"),
 
 		DatabaseVar: DatabaseVar{
