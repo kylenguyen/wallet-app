@@ -1,0 +1,64 @@
+image: golang:1.24
+
+definitions:
+  steps:
+    - step: &clone-golden-pipeline
+        name: Clone Pipeline Files
+        script:
+          - echo -e $GOLDEN_PIPELINES_SSH_KEY > ~/.ssh/golden_pipelines_ssh_key && chmod 400 ~/.ssh/golden_pipelines_ssh_key
+          - GIT_SSH_COMMAND='ssh -i ~/.ssh/golden_pipelines_ssh_key' git clone -b v1.3.2 --depth 1 git@bitbucket.org:ntuclink/sre-golden-pipeline.git /tmp/sre-golden-pipeline
+          - mv /tmp/sre-golden-pipeline/Makefile $BITBUCKET_CLONE_DIR/Makefile.infra
+          - cp /tmp/sre-golden-pipeline/scripts/gcloud_build_image $BITBUCKET_CLONE_DIR/gcloud_build_image
+        artifacts:
+          - Makefile.infra
+          - gcloud_build_image
+
+    - step: &build-and-push-docker
+        name: Build and Push Docker
+        image: google/cloud-sdk:352.0.0
+        script:
+          - export $(grep -v '^#' deployments/rest/app.env | xargs)
+          - export DOCKER_BUILD_ARG_BITBUCKET_CREDENTIAL=${BITBUCKET_CREDENTIAL}
+          - export DOCKER_IMAGE_FILE="deployments/rest/Dockerfile"
+          - make -f Makefile.infra build-docker push-docker
+        services:
+          - docker
+
+    - step: &deploy-cloud-run
+        script:
+          - export $(grep -v '^#' deployments/rest/${APP_ENV}.env | xargs)
+          - make -f Makefile.infra deploy-cloud-run
+        services:
+          - docker
+
+pipelines:
+  pull-requests:
+    "**":
+      import: dpd-backend-cicd:v1:ci-pr
+  
+  branches:
+    main:
+      import: dpd-backend-cicd:v1:ci-merge-tags
+  tags:
+    "**":
+      - step: *clone-golden-pipeline
+      - step: *build-and-push-docker
+      - step:
+          <<: *deploy-cloud-run
+          name: Deploy to Preprod
+          deployment: preprod
+      - step:
+          <<: *deploy-cloud-run
+          name: Deploy to Production
+          deployment: production
+          trigger: manual
+
+  custom:
+    deploy-preprod:
+      - step: *clone-golden-pipeline
+      - step: *build-and-push-docker
+      - step:
+          <<: *deploy-cloud-run
+          name: Deploy to Preprod
+          deployment: preprod
+
