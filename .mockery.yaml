@@ -1,0 +1,10 @@
+with-expecter: true
+dir: "{{.InterfaceDirRelative}}/mocks"
+filename: "{{.InterfaceName | snakecase}}_mock.go"
+mockname: "{{.InterfaceName}}Mock"
+all: true
+outpkg: "mocks"
+packages:
+  bitbucket.org/ntuclink/ff-order-history-go:
+    config:
+      recursive: true
