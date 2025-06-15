@@ -1,6 +1,8 @@
 package server
 
 import (
+	"bitbucket.org/ntuclink/ff-order-history-go/internal/repo"
+	"bitbucket.org/ntuclink/ff-order-history-go/internal/service"
 	"errors"
 	"fmt"
 	"net/http"
@@ -13,10 +15,7 @@ import (
 	ddgin "gopkg.in/DataDog/dd-trace-go.v1/contrib/gin-gonic/gin"
 
 	"bitbucket.org/ntuclink/ff-order-history-go/internal/config"
-	handler "bitbucket.org/ntuclink/ff-order-history-go/internal/handler/rest"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/repo"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/service"
-	"bitbucket.org/ntuclink/ff-order-history-go/pkg/datetime"
+	"bitbucket.org/ntuclink/ff-order-history-go/internal/handler"
 )
 
 // Server represents the HTTP server.
@@ -131,13 +130,14 @@ func (s *Server) ginZerolog() gin.HandlerFunc {
 // RegisterRoutes registers the HTTP routes.
 func (s *Server) RegisterRoutes() {
 	// Initialize repositories, services, and handlers
-	orderSummaryRepo := repo.NewOrderSummary(s.db)
-	orderSummaryService := service.NewOrderSummary(orderSummaryRepo, datetime.NewDatetime(time.Now))
-	orderSummaryHandler := handler.NewOrderSummary(orderSummaryService)
+	//orderSummaryRepo := repo.NewOrderSummary(s.db)
+	//orderSummaryService := service.NewOrderSummary(orderSummaryRepo, datetime.NewDatetime(time.Now))
+	//orderSummaryHandler := handler.NewOrderSummary(orderSummaryService)
+	wRepo := repo.NewWallet()
+	walletService := service.NewWalletImpl(wRepo)
+	walletHandler := handler.NewWallet(walletService)
 
 	s.engine.Group("/v1").
-		GET("/customers/:customerId/order-summary", orderSummaryHandler.GetCustomerOrderSummary)
+		GET("/user/:userId/wallet/:walletId/transactions", walletHandler.GetWalletTransactions)
 
-	s.engine.Group("/v1").
-		GET("/user/:userId/transactions", orderSummaryHandler.GetUserTransactions)
 }
