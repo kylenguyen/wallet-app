@@ -10,7 +10,7 @@ type WalletService interface {
 	GetWalletTransactions(ctx context.Context) ([]string, error)
 }
 
-func NewWallet(wService WalletService) *WalletHandler {
+func NewWalletImpl(wService WalletService) *WalletHandler {
 	return &WalletHandler{wService}
 }
 

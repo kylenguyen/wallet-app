@@ -133,9 +133,9 @@ func (s *Server) RegisterRoutes() {
 	//orderSummaryRepo := repo.NewOrderSummary(s.db)
 	//orderSummaryService := service.NewOrderSummary(orderSummaryRepo, datetime.NewDatetime(time.Now))
 	//orderSummaryHandler := handler.NewOrderSummary(orderSummaryService)
-	wRepo := repo.NewWallet()
+	wRepo := repo.NewWalletImpl(s.db)
 	walletService := service.NewWalletImpl(wRepo)
-	walletHandler := handler.NewWallet(walletService)
+	walletHandler := handler.NewWalletImpl(walletService)
 
 	s.engine.Group("/v1").
 		GET("/user/:userId/wallet/:walletId/transactions", walletHandler.GetWalletTransactions)

@@ -1,12 +1,16 @@
 package repo
 
-import "context"
+import (
+	"context"
+	"github.com/jmoiron/sqlx"
+)
 
 type WalletRepoImpl struct {
+	db *sqlx.DB
 }
 
-func NewWallet() *WalletRepoImpl {
-	return &WalletRepoImpl{}
+func NewWalletImpl(db *sqlx.DB) *WalletRepoImpl {
+	return &WalletRepoImpl{db}
 }
 
 func (wr *WalletRepoImpl) GetWalletTransactions(ctx context.Context) ([]string, error) {
