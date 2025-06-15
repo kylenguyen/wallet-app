@@ -3,17 +3,14 @@ package db
 import (
 	"fmt"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
-	ddsql "gopkg.in/DataDog/dd-trace-go.v1/contrib/database/sql"
-	ddsqlx "gopkg.in/DataDog/dd-trace-go.v1/contrib/jmoiron/sqlx"
+	_ "github.com/lib/pq" // Import the postgres driver
 
 	"bitbucket.org/ntuclink/ff-order-history-go/internal/config"
 )
 
-// Connect establishes a connection to a MySQL database.
-// It configures the connection using parameters from the application's configuration (Viper).
-// It also integrates with DataDog for database tracing.
+// Connect establishes a connection to a PostgreSQL database.
+// It configures the connection using parameters from the application's configuration.
 //
 // Parameters:
 //   - config: The database configuration.
@@ -22,31 +19,34 @@ import (
 //   - *sqlx.DB: A pointer to the connected database instance.
 //   - error: An error if the connection fails.
 func Connect(config config.Config) (*sqlx.DB, error) {
-	dbServiceName := fmt.Sprintf("%s-%s-db", config.ServiceName, config.Env)
-
-	ddsql.Register("mysql", &mysql.MySQLDriver{},
-		ddsql.WithServiceName(dbServiceName),
-		ddsql.WithAnalytics(true))
-
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=true&charset=utf8&loc=Local",
-		config.DatabaseVar.User,
-		config.DatabaseVar.Password,
+	// DSN for PostgreSQL
+	// Example: "host=localhost port=5432 user=user password=password dbname=mydb sslmode=disable"
+	dsn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
 		config.DatabaseVar.Host,
 		config.DatabaseVar.Port,
-		config.DatabaseVar.Name)
+		config.DatabaseVar.User,
+		config.DatabaseVar.Password,
+		config.DatabaseVar.Name,
+	)
 
-	db, err := ddsqlx.Open("mysql", dsn)
+	// Use sqlx.Open for a standard connection without DataDog tracing
+	db, err := sqlx.Open("postgres", dsn)
 	if err != nil {
-		panic(err)
+		// It's generally better to return the error rather than panic,
+		// allowing the caller to decide how to handle it.
+		return nil, fmt.Errorf("failed to open database connection: %w", err)
 	}
 
 	db.SetMaxOpenConns(config.DatabaseVar.MaxOpenConns)
-
 	db.SetMaxIdleConns(config.DatabaseVar.MaxIdleConns)
-
 	db.SetConnMaxLifetime(config.DatabaseVar.ConnMaxLifetime)
 
 	err = db.Ping()
+	if err != nil {
+		// Close the connection if ping fails to prevent resource leaks
+		db.Close()
+		return nil, fmt.Errorf("failed to ping database: %w", err)
+	}
 
-	return db, err
+	return db, nil
 }
