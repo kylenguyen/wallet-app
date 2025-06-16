@@ -140,4 +140,7 @@ func (s *Server) RegisterRoutes() {
 	s.engine.Group("/v1").
 		GET("/user/:userId/wallet/:walletId", walletHandler.GetWalletInfo)
 
+	s.engine.Group("/v1").
+		POST("/user/:userId/wallet/:walletId/deposit", walletHandler.Deposit)
+
 }
