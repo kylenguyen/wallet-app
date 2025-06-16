@@ -8,9 +8,8 @@ import (
 )
 
 type WalletRepo interface {
-	GetWalletTransactions(ctx context.Context) ([]string, error)
-
 	RetrieveWalletByUserIdAndWalletId(ctx context.Context, userId string, walletId string) (*model.Wallet, error)
+	GetTransactionsByWalletID(ctx context.Context, userIDStr string, walletIDStr string) ([]model.Transaction, error)
 	Deposit(ctx context.Context, userIDStr string, walletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
 	Withdraw(ctx context.Context, userIDStr string, walletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
 	Transfer(ctx context.Context, sourceUserIDStr string, sourceWalletIDStr string, destinationWalletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
@@ -24,12 +23,16 @@ func NewWalletImpl(wr WalletRepo) *WalletServiceImpl {
 	return &WalletServiceImpl{wr}
 }
 
-func (ws *WalletServiceImpl) GetWalletTransactions(ctx context.Context) ([]string, error) {
-	return ws.wRepo.GetWalletTransactions(ctx)
-}
-
 func (ws *WalletServiceImpl) GetWalletInfo(ctx context.Context, userId, walletId string) (*model.Wallet, error) {
 	return ws.wRepo.RetrieveWalletByUserIdAndWalletId(ctx, userId, walletId)
+}
+
+func (ws *WalletServiceImpl) GetWalletTransactionsByWalletID(ctx context.Context, userId, walletId string) ([]model.Transaction, error) {
+	transactions, err := ws.wRepo.GetTransactionsByWalletID(ctx, userId, walletId)
+	if err != nil {
+		return nil, fmt.Errorf("service.GetWalletTransactionsByWalletID: %w", err)
+	}
+	return transactions, nil
 }
 
 func (ws *WalletServiceImpl) Deposit(ctx context.Context, userId, walletId string, amount decimal.Decimal) (*model.Transaction, error) {

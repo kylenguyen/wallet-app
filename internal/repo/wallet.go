@@ -26,8 +26,44 @@ func NewWalletImpl(db *sqlx.DB) *WalletRepoImpl {
 	return &WalletRepoImpl{db}
 }
 
-func (wr *WalletRepoImpl) GetWalletTransactions(ctx context.Context) ([]string, error) {
-	return []string{"1234", "5678"}, nil
+// GetTransactionsByWalletID retrieves all transactions for a specific wallet.
+// It also checks if the wallet belongs to the given user for authorization.
+func (wr *WalletRepoImpl) GetTransactionsByWalletID(ctx context.Context, userIDStr string, walletIDStr string) ([]model.Transaction, error) {
+	userID, err := uuid.Parse(userIDStr)
+	if err != nil {
+		return nil, fmt.Errorf("invalid user ID format: %w", err)
+	}
+
+	walletID, err := uuid.Parse(walletIDStr)
+	if err != nil {
+		return nil, fmt.Errorf("invalid wallet ID format: %w", err)
+	}
+
+	// First, verify the wallet exists and belongs to the user
+	var walletExists bool
+	checkWalletQuery := `SELECT EXISTS(SELECT 1 FROM wallets WHERE id = $1 AND user_id = $2)`
+	err = wr.db.GetContext(ctx, &walletExists, checkWalletQuery, walletID, userID)
+	if err != nil {
+		return nil, fmt.Errorf("failed to check wallet existence: %w", err)
+	}
+	if !walletExists {
+		return nil, ErrWalletNotFound // Or a more specific "access denied" / "wallet not found for user"
+	}
+
+	var transactions []model.Transaction
+	query := `SELECT id, wallet_id, type, amount, related_wallet_id, created_at
+              FROM transactions
+              WHERE wallet_id = $1
+              ORDER BY created_at DESC` // Order by most recent
+
+	err = wr.db.SelectContext(ctx, &transactions, query, walletID)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return []model.Transaction{}, nil // Return empty slice if no transactions
+		}
+		return nil, fmt.Errorf("database error retrieving transactions: %w", err)
+	}
+	return transactions, nil
 }
 
 // GetWalletByUserIDAndWalletID retrieves a specific wallet for a user.

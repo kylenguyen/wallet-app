@@ -12,9 +12,8 @@ import (
 )
 
 type WalletService interface {
-	GetWalletTransactions(ctx context.Context) ([]string, error)
-
 	GetWalletInfo(ctx context.Context, userId, walletId string) (*model.Wallet, error)
+	GetWalletTransactionsByWalletID(ctx context.Context, userId, walletId string) ([]model.Transaction, error)
 	Deposit(ctx context.Context, userId, walletId string, amount decimal.Decimal) (*model.Transaction, error)
 	Withdraw(ctx context.Context, userId, walletId string, amount decimal.Decimal) (*model.Transaction, error)
 	Transfer(ctx context.Context, sourceUserId, sourceWalletId, destinationWalletId string, amount decimal.Decimal) (*model.Transaction, error)
@@ -26,12 +25,6 @@ func NewWalletImpl(wService WalletService) *WalletHandler {
 
 type WalletHandler struct {
 	wService WalletService
-}
-
-func (h *WalletHandler) GetWalletTransactions(c *gin.Context) {
-
-	result, _ := h.wService.GetWalletTransactions(nil)
-	restjson.ResponseData(c, result)
 }
 
 func (h *WalletHandler) GetWalletInfo(c *gin.Context) {
@@ -50,6 +43,30 @@ func (h *WalletHandler) GetWalletInfo(c *gin.Context) {
 		return
 	}
 	restjson.ResponseData(c, result)
+}
+
+// GetWalletTransactionsByWalletID handles fetching transactions for a specific wallet.
+// GET /api/v1/users/{user_id}/wallets/{wallet_id}/transactions
+func (h *WalletHandler) GetWalletTransactionsByWalletID(c *gin.Context) {
+	userId := c.Param("userId")
+	walletId := c.Param("walletId")
+
+	if userId == "" || walletId == "" {
+		restjson.ResponseError(c, http.StatusBadRequest, errors.New("userId or walletId is invalid in path"))
+		return
+	}
+
+	transactions, err := h.wService.GetWalletTransactionsByWalletID(c.Request.Context(), userId, walletId)
+	if err != nil {
+		restjson.ResponseError(c, http.StatusInternalServerError, errors.New("failed to retrieve wallet transactions"))
+		return
+	}
+
+	// If transactions is nil (though repo returns empty slice for no rows), ensure it's an empty array in JSON
+	if transactions == nil {
+		transactions = []model.Transaction{}
+	}
+	restjson.ResponseData(c, transactions)
 }
 
 // Deposit handles depositing funds into a wallet.

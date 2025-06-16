@@ -135,10 +135,10 @@ func (s *Server) RegisterRoutes() {
 	walletHandler := handler.NewWalletImpl(walletService)
 
 	s.engine.Group("/v1").
-		GET("/user/:userId/wallet/:walletId/transactions", walletHandler.GetWalletTransactions)
+		GET("/user/:userId/wallet/:walletId", walletHandler.GetWalletInfo)
 
 	s.engine.Group("/v1").
-		GET("/user/:userId/wallet/:walletId", walletHandler.GetWalletInfo)
+		GET("/user/:userId/wallet/:walletId/transactions", walletHandler.GetWalletTransactionsByWalletID)
 
 	s.engine.Group("/v1").
 		POST("/user/:userId/wallet/:walletId/deposit", walletHandler.Deposit)
