@@ -12,6 +12,8 @@ type WalletRepo interface {
 
 	RetrieveWalletByUserIdAndWalletId(ctx context.Context, userId string, walletId string) (*model.Wallet, error)
 	Deposit(ctx context.Context, userIDStr string, walletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
+	Withdraw(ctx context.Context, userIDStr string, walletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
+	Transfer(ctx context.Context, sourceUserIDStr string, sourceWalletIDStr string, destinationWalletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
 }
 
 type WalletServiceImpl struct {
@@ -37,6 +39,31 @@ func (ws *WalletServiceImpl) Deposit(ctx context.Context, userId, walletId strin
 	transaction, err := ws.wRepo.Deposit(ctx, userId, walletId, amount)
 	if err != nil {
 		return nil, fmt.Errorf("service.Deposit: %w", err)
+	}
+	return transaction, nil
+}
+
+func (ws *WalletServiceImpl) Withdraw(ctx context.Context, userId, walletId string, amount decimal.Decimal) (*model.Transaction, error) {
+	if amount.LessThanOrEqual(decimal.Zero) {
+		return nil, fmt.Errorf("withdrawal amount must be positive")
+	}
+	transaction, err := ws.wRepo.Withdraw(ctx, userId, walletId, amount)
+	if err != nil {
+		return nil, fmt.Errorf("service.Withdraw: %w", err)
+	}
+	return transaction, nil
+}
+
+func (ws *WalletServiceImpl) Transfer(ctx context.Context, sourceUserId, sourceWalletId, destinationWalletId string, amount decimal.Decimal) (*model.Transaction, error) {
+	if amount.LessThanOrEqual(decimal.Zero) {
+		return nil, fmt.Errorf("transfer amount must be positive")
+	}
+	if sourceWalletId == destinationWalletId {
+		return nil, fmt.Errorf("source and destination wallets cannot be the same")
+	}
+	transaction, err := ws.wRepo.Transfer(ctx, sourceUserId, sourceWalletId, destinationWalletId, amount)
+	if err != nil {
+		return nil, fmt.Errorf("service.Transfer: %w", err)
 	}
 	return transaction, nil
 }

@@ -143,4 +143,10 @@ func (s *Server) RegisterRoutes() {
 	s.engine.Group("/v1").
 		POST("/user/:userId/wallet/:walletId/deposit", walletHandler.Deposit)
 
+	s.engine.Group("/v1").
+		POST("/user/:userId/wallet/:walletId/withdraw", walletHandler.Withdraw)
+
+	s.engine.Group("/v1").
+		POST("/user/:userId/wallet/:walletId/transfer", walletHandler.Transfer)
+
 }
