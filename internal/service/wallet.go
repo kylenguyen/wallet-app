@@ -8,7 +8,7 @@ import (
 )
 
 type WalletRepo interface {
-	RetrieveWalletByUserIdAndWalletId(ctx context.Context, userId string, walletId string) (*model.Wallet, error)
+	GetWalletInfo(ctx context.Context, userId string, walletId string) (*model.Wallet, error)
 	GetTransactionsByWalletID(ctx context.Context, userIDStr string, walletIDStr string) ([]model.Transaction, error)
 	Deposit(ctx context.Context, userIDStr string, walletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
 	Withdraw(ctx context.Context, userIDStr string, walletIDStr string, amount decimal.Decimal) (*model.Transaction, error)
@@ -24,7 +24,7 @@ func NewWalletImpl(wr WalletRepo) *WalletServiceImpl {
 }
 
 func (ws *WalletServiceImpl) GetWalletInfo(ctx context.Context, userId, walletId string) (*model.Wallet, error) {
-	return ws.wRepo.RetrieveWalletByUserIdAndWalletId(ctx, userId, walletId)
+	return ws.wRepo.GetWalletInfo(ctx, userId, walletId)
 }
 
 func (ws *WalletServiceImpl) GetWalletTransactionsByWalletID(ctx context.Context, userId, walletId string) ([]model.Transaction, error) {

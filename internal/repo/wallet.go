@@ -68,7 +68,7 @@ func (wr *WalletRepoImpl) GetTransactionsByWalletID(ctx context.Context, userIDS
 
 // GetWalletByUserIDAndWalletID retrieves a specific wallet for a user.
 // userIDStr and walletIDStr are strings that will be parsed to uuid.UUID.
-func (wr *WalletRepoImpl) RetrieveWalletByUserIdAndWalletId(ctx context.Context, userIDStr string, walletIDStr string) (*model.Wallet, error) {
+func (wr *WalletRepoImpl) GetWalletInfo(ctx context.Context, userIDStr string, walletIDStr string) (*model.Wallet, error) {
 	userID, err := uuid.Parse(userIDStr)
 	if err != nil {
 		return nil, errors.New("invalid user ID format")
