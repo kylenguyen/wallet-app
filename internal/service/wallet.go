@@ -1,6 +1,7 @@
 package service
 
 import (
+	"bitbucket.org/ntuclink/ff-order-history-go/internal/model"
 	"context"
 	//"net/http"
 	//"strconv"
@@ -14,6 +15,8 @@ import (
 
 type WalletRepo interface {
 	GetWalletTransactions(ctx context.Context) ([]string, error)
+
+	RetrieveWalletByUserIdAndWalletId(ctx context.Context, userId string, walletId string) (*model.Wallet, error)
 }
 
 type WalletServiceImpl struct {
@@ -26,4 +29,8 @@ func NewWalletImpl(wr WalletRepo) *WalletServiceImpl {
 
 func (ws *WalletServiceImpl) GetWalletTransactions(ctx context.Context) ([]string, error) {
 	return ws.wRepo.GetWalletTransactions(ctx)
+}
+
+func (ws *WalletServiceImpl) GetWalletInfo(ctx context.Context, userId, walletId string) (*model.Wallet, error) {
+	return ws.wRepo.RetrieveWalletByUserIdAndWalletId(ctx, userId, walletId)
 }

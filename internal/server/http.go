@@ -129,15 +129,15 @@ func (s *Server) ginZerolog() gin.HandlerFunc {
 
 // RegisterRoutes registers the HTTP routes.
 func (s *Server) RegisterRoutes() {
-	// Initialize repositories, services, and handlers
-	//orderSummaryRepo := repo.NewOrderSummary(s.db)
-	//orderSummaryService := service.NewOrderSummary(orderSummaryRepo, datetime.NewDatetime(time.Now))
-	//orderSummaryHandler := handler.NewOrderSummary(orderSummaryService)
+
 	wRepo := repo.NewWalletImpl(s.db)
 	walletService := service.NewWalletImpl(wRepo)
 	walletHandler := handler.NewWalletImpl(walletService)
 
 	s.engine.Group("/v1").
 		GET("/user/:userId/wallet/:walletId/transactions", walletHandler.GetWalletTransactions)
+
+	s.engine.Group("/v1").
+		GET("/user/:userId/wallet/:walletId", walletHandler.GetWalletInfo)
 
 }
