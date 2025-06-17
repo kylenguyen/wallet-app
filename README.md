@@ -1,6 +1,6 @@
-# Fulfilment Order History
+# Wallet App
 
-This repository contains the source code for the Order History Service, a Go-based microservice responsible for managing and providing access to customer order history data. It's designed to be deployed on Google Cloud Run.
+This repository contains the working version (local env) of Wallet-App. Test version on Google Cloud Run is here.
 
 ## Overview
 
@@ -19,57 +19,59 @@ This service is built using Go and is optimized for deployment on Google Cloud R
 This project follows the [Standard Go Project Layout](https://github.com/golang-standards/project-layout)
 
 ```
-order-history/
-├── cmd/
-│   └── http/
-│       └── main.go             // HTTP entry point
-├── internal/
-│   ├── handler/
-│   │   ├── http/               // Request handlers
-│   │   │   ├── summary.go      
-│   │   │   ├── return.go
-│   │   │   └── router.go 
-│   ├── config/
-│   │   └── config.go           // Loads and manages application configurations
-│   ├── db/           
-│   │   └── db.go               // Database initialization & migrations
-│   ├── presenter/              // Optional: Handle the mapping business data structure & 
-│   │   ├── summary/            //           business input/ouput data
-│   │   │   ├── request.go
-│   │   │   ├── response.go
-│   │   │   └── mapper.go
-│   │   ├── return/
-│   │   │   ├── request.go
-│   │   │   ├── response.go
-│   │   │   └── mapper.go
-│   ├── model/                  // Business data structure
-│   │   ├── summary.go        
-│   │   └── return.go     
-│   ├── service/                // Business logic
-│   │   ├── summary/            
-│   │   │   └── get.go
-│   │   └── return/             
-│   │       └── get.go
-│   │       └── create.go
-│   ├── repo/                   // Handle the interaction with external datasource
-│   │   ├── summary.go          
-│   │   └── return.go           
-├── deployments/                // Handle the deployment configuration
-│   ├── http/
-│   │   ├── preprod.env
-│   │   ├── prod.env
-│   │   └── Dockerfile
-├── pkg/                        // Reusable packages
-├── .gitignore                  // Specifies files to ignore in version control
-├── go.mod                      // Go module definition
-└── go.sum                      // Go module checksums
-
+wallet-app/
+├── cmd/                        // Contains the main applications for the project.
+│   └── rest/                   // Entry point for the REST API.
+│       └── main.go
+├── internal/                   // Private application and library code.
+│   ├── config/                 // Loads and manages application configurations.
+│   │   └── config.go
+│   ├── db/                     // Database initialization and connection logic.
+│   │   └── database.go
+│   ├── handler/                // HTTP request handlers.
+│   │   ├── wallet.go
+│   │   └── mocks/              // Mocks for testing handlers.
+│   │       └── wallet_service_mock.go
+│   ├── model/                  // Business data structures and request/response models.
+│   │   ├── AmountRequest.go
+│   │   ├── transaction.go
+│   │   ├── transaction_type.go
+│   │   ├── TransferRequest.go
+│   │   ├── user.go
+│   │   └── wallet.go
+│   ├── repo/                   // Repository layer: handles interaction with the database.
+│   │   └── wallet.go
+│   ├── server/                 // HTTP server setup, middleware, and route registration.
+│   │   └── http.go
+│   └── service/                // Service layer: contains business logic.
+│       ├── wallet.go
+│       ├── wallet_test.go
+│       └── mocks/              // Mocks for testing services.
+│           └── wallet_repo_mock.go
+├── deployments/                // Deployment-related configurations.
+│   ├── local.env
+│   └── prod.env
+├── migrations/                 // Database migration scripts.
+│   ├── ddl/                    // Data Definition Language (schema creation).
+│   │   └── 001_Initialisation.sql
+│   └── dml/                    // Data Manipulation Language (sample data insertion).
+│       └── 001_Sample_Data.sql
+├── pkg/                        // Reusable packages, safe for external import.
+│   └── restjson/               // Utility functions for standardized JSON API responses.
+│       ├── response.go
+│       └── response_test.go
+├── .gitignore                  // Specifies files to ignore in version control.
+├── .mockery.yaml               // Configuration for the mockery tool (mock generation).
+├── Dockerfile                  // Instructions to build the Docker container image.
+├── docker-compose.yml          // Setup Postgres and Redis containers for local development
+├── go.mod                    
+├── go.sum                     
+└── Makefile                    // Makefile for common development tasks.
 ```
 
 ### Prerequisites
 
 *   Go (version >= 1.24)
-*   Google Cloud SDK (gcloud)
 *   Docker (for local development and containerization)
 
 ### Local Development
@@ -77,7 +79,7 @@ order-history/
 1.  **Clone the repository:**
     ```bash
     git clone <repository-url>
-    cd order-history
+    cd wallet-app
     ```
 
 2.  **Install dependencies:**
@@ -96,10 +98,6 @@ order-history/
 Go Code Review Comment: https://go.dev/wiki/CodeReviewComments
 Common Go Mistakes: https://100go.co/
 
-### Go Lint
-Running the linter is mandatory in CI and during local development. Ensure the linter and govulncheck are run before creating a pull request (PR).
-
-Backend Chapter: [Golang Linter](https://ntuclink.atlassian.net/wiki/spaces/BC/pages/2001960989/Golang+Linter+-+Golangci-lint)
 
 ### Test
 Run tests locally
@@ -129,4 +127,4 @@ mockery
 
 ## Contact
 
-For any questions or issues, please contact: <dpd-fulfilment@ntucenterprise.sg>
+Kyle Nguyen
