@@ -4,13 +4,16 @@ This repository contains the working version (local env) of Wallet-App. Test ver
 
 ## Overview
 
-The Order History Service provides RESTful APIs for interacting with order history data:
+The wallet-app provides RESTful APIs for managing customers wallets including:
 
-*   Retrieving individual order details.
-*   Listing orders for a specific customer.
-*   Filtering and sorting orders based on various criteria (e.g., date, status).
+*   Getting Wallet Balance
+*   Deposit money
+*   Withdrawing money
+*   Transfer money to another wallet
+*   Retrieve past transactions of a wallet
 
-This service is built using Go and is optimized for deployment on Google Cloud Run, leveraging its serverless and autoscaling capabilities.
+
+This project excluding user authentication & authorisation but is designed to be able to support this if needed in future.
 
 ## Getting Started
 
@@ -30,8 +33,7 @@ wallet-app/
 │   │   └── database.go
 │   ├── handler/                // HTTP request handlers.
 │   │   ├── wallet.go
-│   │   └── mocks/              // Mocks for testing handlers.
-│   │       └── wallet_service_mock.go
+│   │   └── mocks/             
 │   ├── model/                  // Business data structures and request/response models.
 │   │   ├── AmountRequest.go
 │   │   ├── transaction.go
@@ -46,8 +48,7 @@ wallet-app/
 │   └── service/                // Service layer: contains business logic.
 │       ├── wallet.go
 │       ├── wallet_test.go
-│       └── mocks/              // Mocks for testing services.
-│           └── wallet_repo_mock.go
+│       └── mocks/           
 ├── deployments/                // Deployment-related configurations.
 │   ├── local.env
 │   └── prod.env
