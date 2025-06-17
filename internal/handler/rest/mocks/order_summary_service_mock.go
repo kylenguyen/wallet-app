@@ -5,9 +5,8 @@ package mocks
 import (
 	context "context"
 
-	mock "github.com/stretchr/testify/mock"
-
 	model "bitbucket.org/ntuclink/ff-order-history-go/internal/model"
+	mock "github.com/stretchr/testify/mock"
 
 	time "time"
 )
