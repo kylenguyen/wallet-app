@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"os"
 
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/config"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/db"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/server"
+	"github.com/kylenguyen/wallet-app/internal/config"
+	"github.com/kylenguyen/wallet-app/internal/db"
+	"github.com/kylenguyen/wallet-app/internal/server"
 	"github.com/rs/zerolog"
 )
 

@@ -5,6 +5,6 @@ mockname: "{{.InterfaceName}}Mock"
 all: true
 outpkg: "mocks"
 packages:
-  bitbucket.org/ntuclink/ff-order-history-go:
+  github.com/kylenguyen/wallet-app:
     config:
       recursive: true

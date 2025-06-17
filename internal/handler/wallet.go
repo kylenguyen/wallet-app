@@ -1,12 +1,12 @@
 package handler
 
 import (
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/model"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/repo"
-	"bitbucket.org/ntuclink/ff-order-history-go/pkg/restjson"
 	"context"
 	"errors"
 	"github.com/gin-gonic/gin"
+	"github.com/kylenguyen/wallet-app/internal/model"
+	"github.com/kylenguyen/wallet-app/internal/repo"
+	"github.com/kylenguyen/wallet-app/pkg/restjson"
 	"github.com/shopspring/decimal"
 	"net/http"
 )

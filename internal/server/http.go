@@ -1,10 +1,10 @@
 package server
 
 import (
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/repo"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/service"
 	"errors"
 	"fmt"
+	"github.com/kylenguyen/wallet-app/internal/repo"
+	"github.com/kylenguyen/wallet-app/internal/service"
 	"net/http"
 	"time"
 
@@ -14,8 +14,8 @@ import (
 	"github.com/rs/zerolog"
 	ddgin "gopkg.in/DataDog/dd-trace-go.v1/contrib/gin-gonic/gin"
 
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/config"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/handler"
+	"github.com/kylenguyen/wallet-app/internal/config"
+	"github.com/kylenguyen/wallet-app/internal/handler"
 )
 
 // Server represents the HTTP server.

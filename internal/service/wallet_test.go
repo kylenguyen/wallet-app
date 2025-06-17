@@ -6,9 +6,9 @@ import (
 	"github.com/google/uuid"
 	"testing"
 
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/model"
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/service"
-	walletmocks "bitbucket.org/ntuclink/ff-order-history-go/internal/service/mocks" // Assuming you'll create this mock
+	"github.com/kylenguyen/wallet-app/internal/model"
+	"github.com/kylenguyen/wallet-app/internal/service"
+	walletmocks "github.com/kylenguyen/wallet-app/internal/service/mocks" // Assuming you'll create this mock
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"

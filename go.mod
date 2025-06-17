@@ -1,9 +1,8 @@
-module bitbucket.org/ntuclink/ff-order-history-go
+module github.com/kylenguyen/wallet-app
 
 go 1.24.1
 
 require (
-	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/gin-gonic/gin v1.10.0
 	github.com/google/uuid v1.6.0
 	github.com/jmoiron/sqlx v1.4.0

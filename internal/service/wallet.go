@@ -1,9 +1,9 @@
 package service
 
 import (
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/model"
 	"context"
 	"fmt"
+	"github.com/kylenguyen/wallet-app/internal/model"
 	"github.com/shopspring/decimal"
 )
 

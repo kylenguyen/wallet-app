@@ -6,7 +6,7 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // Import the postgres driver
 
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/config"
+	"github.com/kylenguyen/wallet-app/internal/config"
 )
 
 // Connect establishes a connection to a PostgreSQL database.

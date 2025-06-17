@@ -1,13 +1,13 @@
 package repo
 
 import (
-	"bitbucket.org/ntuclink/ff-order-history-go/internal/model"
 	"context"
 	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/jmoiron/sqlx"
+	"github.com/kylenguyen/wallet-app/internal/model"
 	"github.com/shopspring/decimal"
 	"time"
 )
