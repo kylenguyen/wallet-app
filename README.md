@@ -100,7 +100,7 @@ Common Go Mistakes: https://100go.co/
 
 
 ### Test
-Run tests locally
+Run tests locally. Currently only some tests are available (refer to internal/service/wallet_test.go)
 ```bash
 make local-test
 ```
@@ -110,7 +110,7 @@ Generate mock file. Ensure your machine has mockery installed.
 
 Mockery office website: https://github.com/vektra/mockery. TL'DR
 
-Instal mockery:
+Install mockery:
 ```bash
 go install github.com/vektra/mockery/v2@v2.53.3
 ```
