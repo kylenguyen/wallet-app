@@ -12,7 +12,7 @@ WORKDIR /app
 COPY go.mod ./
 RUN go mod download
 
-COPY . .
+COPY deployments/rest .
 RUN go build -o /go/bin/order-history-rest ./cmd/rest
 
 FROM alpine:3.21

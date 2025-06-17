@@ -39,9 +39,9 @@ type DatabaseVar struct {
 func Load() (Config, error) {
 	env, ok := os.LookupEnv("ENV")
 	if ok && env == "prod" {
-		viper.SetConfigFile("./deployments/rest/prod.env")
+		viper.SetConfigFile("./deployments/prod.env")
 	} else {
-		viper.SetConfigFile("./deployments/rest/local.env")
+		viper.SetConfigFile("./deployments/local.env")
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
