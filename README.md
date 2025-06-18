@@ -15,6 +15,10 @@ The wallet-app provides RESTful APIs for managing customers wallets including:
 
 This project excluding user authentication & authorisation but is designed to be able to support this if needed in future.
 
+
+### What is pending (in roadmap but not yet available):
+- Adding middleware mechanism for Idempotency-Key (Using Redis). This will help avoid unintended impacts of retries on POST-endpoints
+
 ## Getting Started
 
 ### Project Structure
@@ -87,10 +91,14 @@ wallet-app/
     ```bash
     go mod tidy
     ```
-
-3.  **Run the application:**
+3. **Run Postgres Server (refer to docker-compose.yaml for username/password:**
     ```bash
-    go run .cmd/http/main.go
+    docker compose up -d
+    ```
+
+4. **Run the application:**
+    ```bash
+    go run ./cmd/rest/main.go
     ```
 
 ## Development Workflow
@@ -99,6 +107,10 @@ wallet-app/
 Go Code Review Comment: https://go.dev/wiki/CodeReviewComments
 Common Go Mistakes: https://100go.co/
 
+
+### First time setup Database
+Setup database schema under ./migrations/ddl/001_Initialisation.sql 
+Adding sample data for user, wallet and transactions under ./migrations/dml/001_Sample_Data.sql
 
 ### Test
 Run tests locally. Currently only some tests are available (refer to internal/service/wallet_test.go)
@@ -125,7 +137,3 @@ To generate mock file, run this command without any additional flags - thank to 
 ```bash
 mockery
 ```
-
-## Contact
-
-Kyle Nguyen

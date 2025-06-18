@@ -18,10 +18,8 @@ import (
 var (
 	testUser1UUIDString   = "d5b706b8-c331-4670-9199-a773d10878d5"
 	testWallet1UUIDString = "f8b3f7a7-1b3b-4b3f-8f3b-3b3b3b3b3b3b"
-	testWallet2UUIDString = "e2a7b6c5-4d3e-5f6a-9b8c-7d6e5f4a3b2c" // For transfer destination
 	testUser1UUID         = uuid.MustParse(testUser1UUIDString)
 	testWallet1UUID       = uuid.MustParse(testWallet1UUIDString)
-	testWallet2UUID       = uuid.MustParse(testWallet2UUIDString) // Define if needed for model.Wallet init
 )
 
 func TestWalletServiceImpl_GetWalletInfo(t *testing.T) {
