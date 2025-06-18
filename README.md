@@ -11,6 +11,7 @@ The wallet-app provides RESTful APIs for managing customers wallets including:
 *   Withdrawing money
 *   Transfer money to another wallet
 *   Retrieve past transactions of a wallet
+*   Unit Tests (./internal/service/wallet_test.go)
 
 
 This project excluding user authentication & authorisation but is designed to be able to support this if needed in future.
