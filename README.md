@@ -1,6 +1,6 @@
 # Wallet App
 
-This repository contains the working version (local env) of Wallet-App. Test version on Google Cloud Run is here.
+This repository contains the working version (local env) of Wallet-App. Test version on Google Cloud Run is avaiable at (TBD).
 
 ## Overview
 
