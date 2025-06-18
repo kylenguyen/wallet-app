@@ -15,6 +15,12 @@ The wallet-app provides RESTful APIs for managing customers wallets including:
 
 This project excluding user authentication & authorisation but is designed to be able to support this if needed in future.
 
+### System Design
+API Endpoints:
+- https://documenter.getpostman.com/view/28966723/2sB2x9jAUe
+
+Database Design:
+- ./migrations/ddl/001_Initialisation.sql
 
 ### What is pending (in roadmap but not yet available):
 - Adding middleware mechanism for Idempotency-Key (Using Redis). This will help avoid unintended impacts of retries on POST-endpoints
